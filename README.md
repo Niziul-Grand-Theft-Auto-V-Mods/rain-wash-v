@@ -11,7 +11,7 @@
 </p>
 
 <p><strong>About the mod</strong></p>
-<p>This mod brings the effortless convenience of rain washing away vehicle dirt. Enjoy the simplicity of maintaining a clean ride as rain showers automatically cleanse your vehicle's exterior, leaving it sparkling and spotless without any extra effort on your part.</p>
+<p>This mod brings the effortless convenience of rain-washing away vehicle dirt. Enjoy the simplicity of maintaining a clean ride as rain showers automatically cleanse your vehicle's exterior, leaving it sparkling and spotless without any extra effort.</p>
 
 <p><strong>Requisites</strong></p>
 <ul>
@@ -20,7 +20,7 @@
 
 <p><strong>Featured</strong></p>
 <ul>
-    <li>Automatic Vehicle Cleaning: Rain showers automatically wash away dirt and grime from your vehicle's exterior without any manual input required.</li>
+    <li>Automatic Vehicle Cleaning: Rain showers automatically wash away dirt and grime from your vehicle's exterior without requiring manual input.</li>
 </ul>
 
 <p><strong>Installation</strong></p>
