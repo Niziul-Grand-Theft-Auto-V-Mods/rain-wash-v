@@ -94,9 +94,8 @@ static void Update()
     
     if (vehicleSpeed > 15.0f)
     {
-
         dirtLevel
-            -= vehicleSpeed > 15.0f ? 1e-3f + (vehicleSpeed / 100.0f) : 0.0f;
+            -= 1e-3f + (vehicleSpeed / 100.0f);
         
         WashVehicleDirt(vehicleId, dirtLevel
                                         = dirtLevel > 0.00f ? dirtLevel : 0.00f);
@@ -105,7 +104,7 @@ static void Update()
     if (vehicleSpeed > 35.0f)
     {
         decalLevel
-            -= vehicleSpeed > 35.0f ? 1e-3f + (vehicleSpeed / 100.0f) : 0.0f;
+            -= 1e-3f + (vehicleSpeed / 100.0f);
         
         WashVehicleDecal(vehicleId, decalLevel
                                         = decalLevel > 0.99f ? decalLevel : 0.99f);
