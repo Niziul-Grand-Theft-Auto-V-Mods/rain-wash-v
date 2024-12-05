@@ -46,6 +46,11 @@ namespace GAME
         return GetDirtLevel(vehicleId) > 0.0f;
     }
 
+    bool GetIsVehicleStopped(int& vehicleId)
+    {
+        return IS_VEHICLE_STOPPED(vehicleId);
+    }
+
     int GetVehicleId(int& playerId)
     {
         return GET_VEHICLE_PED_IS_IN(GET_PLAYER_PED(playerId), false);

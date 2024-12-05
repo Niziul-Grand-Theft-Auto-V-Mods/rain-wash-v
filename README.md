@@ -31,6 +31,10 @@
 
 <p><strong>Changelog</strong></p>
 <ul>
+    <li>[0.1.1.0]<ul>
+            <li>now cars clean up when stationary;</li>
+        </ul>
+    </li>
     <li>[0.1.0.0]<ul>
             <li>initial release;</li>
         </ul>

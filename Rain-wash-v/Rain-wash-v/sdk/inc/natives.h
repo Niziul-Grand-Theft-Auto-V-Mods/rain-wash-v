@@ -141,6 +141,12 @@ namespace VEHICLE
     {
         return invoke<float>(0x8F17BC8BA08DA62B, vehicle);
     } // 0x8F17BC8BA08DA62B 0xFD15C065 b323
+
+    // https://nativedb.dotindustries.dev/natives/0x5721B434AD84D57A
+    static BOOL IS_VEHICLE_STOPPED(int vehicle)
+    {
+        return invoke<BOOL>(0x5721B434AD84D57A, vehicle);
+    } // 0x5721B434AD84D57A 0x655F072C b323
 }
 
 namespace MISC
