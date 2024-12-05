@@ -91,27 +91,44 @@ static void Update()
 
     vehicleSpeed
         = GetVehicleSpeed(vehicleId);
-    
-    if (vehicleSpeed > 15.0f)
-    {
-        dirtLevel
-            -= 1e-3f + (vehicleSpeed / 100.0f);
-        
-        WashVehicleDirt(vehicleId, dirtLevel
-                                        = dirtLevel > 0.00f ? dirtLevel : 0.00f);
-    }
 
-    if (vehicleSpeed > 35.0f)
+    isVehicleStopped
+        = GetIsVehicleStopped(vehicleId);
+
+    if (isVehicleStopped)
     {
-        decalLevel
-            -= 1e-3f + (vehicleSpeed / 100.0f);
-        
+        WashVehicleDirt(vehicleId, dirtLevel
+                                            = dirtLevel > 0.00f ? dirtLevel -= 0.05f : 0.00f);
+
         WashVehicleDecal(vehicleId, decalLevel
-                                        = decalLevel > 0.99f ? decalLevel : 0.99f);
+                                            = decalLevel > 0.99f ? decalLevel -= 0.05f : 0.99f);
+    }
+    else
+    {
+        if (vehicleSpeed > 15.0f)
+        {
+            dirtLevel
+                -= 1e-3f + (vehicleSpeed / 100.0f);
+        
+            WashVehicleDirt(vehicleId, dirtLevel
+                                            = dirtLevel > 0.00f ? dirtLevel : 0.00f);
+        }
+
+        if (vehicleSpeed > 35.0f)
+        {
+            decalLevel
+                -= 1e-3f + (vehicleSpeed / 100.0f);
+        
+            WashVehicleDecal(vehicleId, decalLevel
+                                            = decalLevel > 0.99f ? decalLevel : 0.99f);
+        }
     }
 
 #ifdef _DEBUG
 
+    postTickerWithTokens(std
+                            ::to_string(isVehicleStopped)
+                                .append(" - ~r~is_vehicle_stopped~w~"));
     postTickerWithTokens(std
                             ::to_string(vehicleSpeed)
                                 .append(" - ~r~vehicle_speed~w~"));
