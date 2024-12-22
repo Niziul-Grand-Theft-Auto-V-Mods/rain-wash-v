@@ -23,6 +23,25 @@
     <li>Automatic Vehicle Cleaning: Rain showers automatically wash away dirt and grime from your vehicle's exterior without requiring manual input.</li>
 </ul>
 
+<p><strong>Build</strong></p>
+<ol>
+    <li>Configure the project using CMake:</li>
+    <ul>
+        <li><code>cmake -S . -B build -DCMAKE_BUILD_TYPE=Release</code></li>
+    </ul>
+    <li>Run the build process with MSBuild:</li>
+    <ul>
+        <li><code>cmake --build build --config Release</code></li>
+    </ul>
+    <li>Ensure all required libraries are present (e.g., <code>ScriptHookV.lib</code>).</li>
+    <li>Add post-build commands in <code>CMakeLists.txt</code> to copy output files:</li>
+    <li>Rebuild the project to apply changes:</li>
+    <ul>
+        <li><code>cmake --build build --config Release</code></li>
+    </ul>
+    <li>Verify the output in the target game directory and test functionality.</li>
+</ol>
+
 <p><strong>Installation</strong></p>
 <ol>
     <li>Extract from the ".rar" the ".asi" file;</li>
@@ -31,6 +50,16 @@
 
 <p><strong>Changelog</strong></p>
 <ul>
+    <li>[0.1.2.0]<ul>
+            <li>Introduced a logging system to record details of nearby vehicles in a log file;</li>
+            <li>Implemented a sorting mechanism for vehicles based on their distance from the player;</li>
+            <li>Added a feature to clean multiple nearby vehicles dynamically based on rain and proximity;</li>
+            <li>Optimized vehicle washing logic with the use of `std::max` for calculating dirt and decal levels;</li>
+            <li>Enhanced error handling for entities that do not exist during vehicle processing;</li>
+            <li>Implemented dynamic memory management for vehicle pool handling;</li>
+            <li>Refactored code to improve modularity and readability by restructuring include paths and namespaces;</li>
+        </ul>
+    </li>
     <li>[0.1.1.0]<ul>
             <li>now cars clean up when stationary;</li>
         </ul>

@@ -6,15 +6,14 @@
 #pragma once
 
 #include <string>
-#include <natives.h>
+#include "../../../util/natives.h"
 #include "enums/feed_message_type.h"
 #include "enums/feed_post_message_icon_type.h"
 
 using std::string;
 
-namespace FEEDPOST
+namespace feedpost
 {
-    
     /// <summary>
     /// Displays the ticker text string above the top left of the minimap.
     /// </summary>
