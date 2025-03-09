@@ -108,8 +108,8 @@ void wash_all_near_vehicles(const Vehicle *vehicles,
             continue;
         }
 
-        auto decal_level
-            = 1.0f;
+        /*auto decal_level*/
+            /*= 1.0f;*/
 
         auto rain_level
             = game::get_rain_level();
@@ -128,18 +128,17 @@ void wash_all_near_vehicles(const Vehicle *vehicles,
             wash::wash_vehicle_dirt(vehicle_id,
                                     dirt_level
                                         = max(0, dirt_level -= rain_level / 100.0f));
-            wash::wash_vehicle_decal(vehicle_id,
-                                     decal_level
-                                        = max(0, decal_level = -rain_level / 100.0f));
         }
         else
         {
             wash::wash_vehicle_dirt(vehicle_id,
                                     dirt_level
                                         = max(0, dirt_level -= (rain_level / 100.0f) + (vehicle_speed / 100.0f)));
-            wash::wash_vehicle_decal(vehicle_id,
-                                     decal_level
-                                        = max(0, decal_level -= (rain_level / 100.0f) + (vehicle_speed / 100.0f)));
+
+            if (vehicle_speed > 5.0f)
+            {
+                 wash::wash_vehicle_decal(vehicle_id, 0.015f);
+            }
         }
     }
 };
