@@ -50,6 +50,10 @@
 
 <p><strong>Changelog</strong></p>
 <ul>
+    <li>[0.1.2.1]<ul>
+            <li>fixed a bug that quickly removed the decal not allowing the vehicle to get blood or mud on it;</li>
+        </ul>
+    </li>
     <li>[0.1.2.0]<ul>
             <li>Introduced a logging system to record details of nearby vehicles in a log file;</li>
             <li>Implemented a sorting mechanism for vehicles based on their distance from the player;</li>
