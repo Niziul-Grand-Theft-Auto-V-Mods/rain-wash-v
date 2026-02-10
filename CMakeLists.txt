@@ -1,95 +1,73 @@
+# Require a recent enough CMake version for the features we use
 cmake_minimum_required(VERSION 3.27)
 
-project(Rainwashv
+# Declare the project: name, language, version and optional description
+project(rain-wash-v
     LANGUAGES CXX
-    VERSION 0.1.2.0
+    VERSION 0.1.3.0
     DESCRIPTION "A mod that incorporates the feature from GTA IV where rain cleans the vehicle's dirt."
 )
 
+# ---------------- C++ standard configuration ----------------
+# Use C++17 for all targets unless overridden
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 
+# Generate compile_commands.json (useful for IDEs, clangd, etc.)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# ---------------- Compiler warnings / flags -----------------
+# Prefer target-specific options, but we gather them here for MSVC
 if(MSVC)
-    add_compile_options(/EHsc /W4 /permissive- /std:c++17)
-else()
-    add_compile_options(-Wall -Wextra -pedantic -std=c++17)
+    # /EHsc   : standard C++ exception handling
+    # /W4     : warning level 4 (high)
+    # /permissive- : enforce strict C++ conformance
+    set(RAIN_WASH_V_WARNING_FLAGS /EHsc /W4 /permissive-)
 endif()
 
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(PLATFORM x64)
-endif()
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PLATFORM}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PLATFORM}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PLATFORM}/bin)
-
-include(FetchContent)
-
-set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
-
-FetchContent_Declare(
-    scripthookv
-    URL https://ntscorp.ru/dev-c/ScriptHookV_SDK_1.0.617.1a.zip
-)
-FetchContent_MakeAvailable(scripthookv)
-
-set(SCRIPTHOOKV_INC_DIR ${scripthookv_SOURCE_DIR}/inc)
-set(SCRIPTHOOKV_LIB_DIR ${scripthookv_SOURCE_DIR}/lib)
-
-add_library(ScriptHookV STATIC IMPORTED)
-set_target_properties(ScriptHookV PROPERTIES
-    IMPORTED_LOCATION ${SCRIPTHOOKV_LIB_DIR}/ScriptHookV.lib
-    INTERFACE_INCLUDE_DIRECTORIES ${SCRIPTHOOKV_INC_DIR}
+# ---------------- Library target definition -----------------
+# Build the main plugin as a shared library (.dll which we will rename to .asi)
+add_library(rain-wash-v SHARED
+    src/main.cpp
+    src/script.cpp
+    src/util/game.cpp
+    src/util/keyboard.cpp
+    src/util/post_ticker.cpp
+    src/util/settings.cpp
+    src/util/wash.cpp
 )
 
-if(NOT TARGET ScriptHookV)
-    message(FATAL_ERROR "ScriptHookV library was not properly fetched.")
-endif()
+# Apply warning flags only to this target (and only if defined, e.g. on MSVC)
+target_compile_options(rain-wash-v PRIVATE ${RAIN_WASH_V_WARNING_FLAGS})
 
-add_library(Rainwashv SHARED
-    inc/dllscript.h
-    inc/util/natives.h
-    inc/features/wash/wash.h
-    inc/rage-engine/game/game.h
-    inc/rage-engine/ui/feed-post/enums/feed_message_type.h
-    inc/rage-engine/ui/feed-post/enums/feed_post_message_icon_type.h
-    inc/rage-engine/ui/feed-post/feed_post.h
-    src/dllscript.cpp
-    src/features/wash/wash.cpp
-    src/rage-engine/game/game.cpp
-    src/rage-engine/ui/feed-post/feed_post.cpp
-)
-target_include_directories(Rainwashv PRIVATE
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/inc
+# ---------------- ScriptHookV configuration -----------------
+# Path to ScriptHookV import library (.lib)
+# Marked CACHE so users can override it from cmake-gui / ccmake
+set(SCRIPTHOOKV_LIB
+    "${CMAKE_SOURCE_DIR}/lib/shv/ScriptHookV.lib"
+    CACHE FILEPATH "ScriptHookV import library"
 )
 
-target_link_libraries(Rainwashv
-    PRIVATE ScriptHookV
+# ---------------- Linking -----------------------
+# Link against ScriptHookV
+target_link_libraries(rain-wash-v PRIVATE
+    "${SCRIPTHOOKV_LIB}"
 )
 
-target_compile_definitions(Rainwashv PRIVATE $<$<CONFIG:Debug>:_DEBUG> $<$<CONFIG:Release>:NDEBUG>)
-
-set(GTA_V_DIR "D:/SteamLibrary/steamapps/common/Grand Theft Auto V" CACHE PATH "Path to GTA V installation directory")
-if(NOT EXISTS "${GTA_V_DIR}")
-    message(FATAL_ERROR "GTA_V_DIR is invalid or does not exist: ${GTA_V_DIR}")
-endif()
-
-add_custom_command(TARGET Rainwashv POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Rainwashv> "${GTA_V_DIR}/"
+# ---------------- Configuration‑specific defines ----------------
+# Define _DEBUG for Debug builds, NDEBUG for Release/RelWithDebInfo
+target_compile_definitions(rain-wash-v PRIVATE
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
+    $<$<CONFIG:RelWithDebInfo>:NDEBUG>
 )
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_CONFIGURATION_TYPES STREQUAL "Debug")
-    add_custom_command(TARGET Rainwashv POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:Rainwashv> "${GTA_V_DIR}/"
-    )
-endif()
-
-set_target_properties(Rainwashv PROPERTIES
+# ---------------- Output naming / versioning ----------------
+# On Windows, the shared library normally has .dll extension.
+# We override it to .asi so ScriptHookV treats it as a plugin.
+set_target_properties(rain-wash-v PROPERTIES
     OUTPUT_NAME "Rain-wash-v"
     SUFFIX ".asi"
-    DEBUG_POSTFIX ""
-    RELWITHDEBINFO_POSTFIX ""
+    VERSION ${PROJECT_VERSION}
 )

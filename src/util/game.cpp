@@ -1,8 +1,4 @@
-#include "../../../inc/rage-engine/game/game.h"
-#include "../../../inc/util/natives.h"
-
-namespace game
-{
+#include "game.hpp"
 
 int get_player_id()
 {
@@ -53,4 +49,13 @@ bool get_is_player_sitting_in_this_vehicle(int &playerPedId)
 {
     return PED::IS_PED_SITTING_IN_ANY_VEHICLE(playerPedId);
 }
-} // namespace game
+
+bool get_is_raining()
+{
+  return get_rain_level() != 0.0f;
+}
+
+bool get_is_vehicle_dirty(int &vehicleId)
+{
+  return get_dirt_level(vehicleId) > 0.0f;
+}
